@@ -1,5 +1,6 @@
 import sqlite3
 
+
 # Função para criar a tabela de clientes no banco de dados com tratamento de exceções
 def criar_tabela_clientes():
     try:

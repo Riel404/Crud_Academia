@@ -1,4 +1,4 @@
-#EXECUTE ESSE CÓDIGO
+#EXECUTE ESSE CÓDIGO:
 import sqlite3
 import tkinter as tk
 from tkinter import ttk
