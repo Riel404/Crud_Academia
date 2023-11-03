@@ -1,11 +1,10 @@
-#EXECUTE ESSE CÓDIGO:
 import sqlite3
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 
 
-# Função para inserir um cliente no banco de dados com tratamento de exceções
+# Função para cadastrar um cliente no banco de dados com tratamento de exceções
 def inserir_cliente(nome, idade, sexo, endereco, telefone):
     try:
         if not nome or nome[0].isdigit():
@@ -53,7 +52,44 @@ def inserir_cliente(nome, idade, sexo, endereco, telefone):
         messagebox.showerror("Erro ao inserir cliente", str(ve))
 
 
-# Função para inserir um treinador no banco de dados com tratamento de exceções
+# Função para adicionar um novo cliente na interface
+def adicionar_cliente_na_interface():
+    nome = nome_cliente_entry.get()
+    idade = idade_cliente_entry.get()
+    sexo = sexo_cliente_entry.get()
+    endereco = endereco_cliente_entry.get()
+    telefone = telefone_cliente_entry.get()
+
+    campos_inconsistentes = []
+
+    if not nome or nome[0].isdigit():
+        campos_inconsistentes.append("Nome (deve começar com letras)")
+
+    if not idade.isdigit() or int(idade) < 0:
+        campos_inconsistentes.append("Idade (deve ser um número inteiro não negativo)")
+
+    sexo = sexo.lower()
+    if sexo not in ['m', 'f', 'masculino', 'feminino']:
+        campos_inconsistentes.append("Sexo (M para masculino, F para feminino)")
+
+    if not endereco:
+        campos_inconsistentes.append("Endereço (não pode estar vazio)")
+
+    if len(telefone) < 8:
+        campos_inconsistentes.append("Telefone (pelo menos 8 dígitos)")
+
+    if campos_inconsistentes:
+        messagebox.showinfo("Atenção", f"Campos inconsistentes: {', '.join(campos_inconsistentes)}")
+    else:
+        try:
+            inserir_cliente(nome, idade, sexo, endereco, telefone)
+            listar_clientes_na_interface()
+            messagebox.showinfo("Sucesso", "Seu cadastro foi realizado com sucesso!")
+        except:
+            messagebox.showerror("Erro", "Ocorreu um erro ao adicionar o cliente. Por favor, tente novamente.")
+
+
+# Função para cadastrar um treinador no banco de dados com tratamento de exceções
 def inserir_treinador(nome, especializacao, experiencia, numero_registro):
     try:
         if not nome or nome[0].isdigit():
@@ -92,38 +128,36 @@ def inserir_treinador(nome, especializacao, experiencia, numero_registro):
         messagebox.showerror("Erro ao inserir treinador", str(ve))
 
 
-# Função para listar todos os clientes com tratamento de exceções
-def listar_clientes():
-    try:
-        conn = sqlite3.connect('academia.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM clientes')
-        clientes = cursor.fetchall()
-        conn.close()
-        if not clientes:
-            print("Nenhum cliente cadastrado.")
-        else:
-            for cliente in clientes:
-                print(cliente)
-    except sqlite3.Error as e:
-        print(f"Erro ao listar clientes: {e}")
+# Função para adicionar um novo treinador na interface
+def adicionar_treinador_na_interface():
+    nome_treinador = nome_treinador_entry.get()
+    especializacao = especializacao_entry.get()
+    experiencia = experiencia_entry.get()
+    numero_registro = numero_registro_entry.get()
 
+    campos_inconsistentes = []
 
-# Função para listar todos os treinadores com tratamento de exceções
-def listar_treinadores():
-    try:
-        conn = sqlite3.connect('academia.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM treinadores')
-        treinadores = cursor.fetchall()
-        conn.close()
-        if not treinadores:
-            print("Nenhum treinador cadastrado.")
-        else:
-            for treinador in treinadores:
-                print(treinador)
-    except sqlite3.Error as e:
-        print(f"Erro ao listar treinadores: {e}")
+    if not nome_treinador or nome_treinador[0].isdigit():
+        campos_inconsistentes.append("Nome (deve começar com letras)")
+
+    if not especializacao:
+        campos_inconsistentes.append("Especialização (não pode estar vazia)")
+
+    if not experiencia.isdigit() or int(experiencia) < 0:
+        campos_inconsistentes.append("Experiência (deve ser um número inteiro não negativo)")
+
+    if not isinstance(numero_registro, str) or len(numero_registro) < 6:
+        campos_inconsistentes.append("Número de Registro (pelo menos 6 dígitos)")
+
+    if campos_inconsistentes:
+        messagebox.showinfo("Atenção", f"Campos inconsistentes: {', '.join(campos_inconsistentes)}")
+    else:
+        try:
+            inserir_treinador(nome_treinador, especializacao, experiencia, numero_registro)
+            listar_treinadores_na_interface()
+            messagebox.showinfo("Sucesso", "Seu cadastro foi realizado com sucesso!")
+        except:
+            messagebox.showerror("Erro", "Ocorreu um erro ao adicionar o treinador. Por favor, tente novamente.")
 
 
 # Função para atualizar informações de um cliente com tratamento de exceções
@@ -184,43 +218,31 @@ def atualizar_cliente(id, nome=None, idade=None, sexo=None, endereco=None, telef
         messagebox.showerror("Erro ao atualizar cliente", str(ve))
 
 
-# Função para inserir um treinador no banco de dados com tratamento de exceções
-def inserir_treinador(nome, especializacao, experiencia, numero_registro):
+# Função para atualizar um cliente na interface
+def atualizar_cliente_na_interface():
+    selected_item = tree_clientes.selection()
+    if selected_item:
+        id_cliente = int(tree_clientes.item(selected_item, 'values')[0])
+        nome = nome_cliente_entry.get()
+        idade = idade_cliente_entry.get()
+        sexo = sexo_cliente_entry.get()
+        endereco = endereco_cliente_entry.get()
+        telefone = telefone_cliente_entry.get()
+
+        atualizar_cliente(id_cliente, nome, idade, sexo, endereco, telefone)
+        listar_clientes_na_interface()
+        nome_cliente_entry.delete(0, tk.END)
+        idade_cliente_entry.delete(0, tk.END)
+        sexo_cliente_entry.delete(0, tk.END)
+        endereco_cliente_entry.delete(0, tk.END)
+        telefone_cliente_entry.delete(0, tk.END)
+
     try:
-        if not nome or nome[0].isdigit():
-            messagebox.showerror("Erro ao inserir treinador", "Favor digitar no campo Nome começando com letras.")
-            raise ValueError("Favor digitar no campo Nome começando com letras.")
-
-        if not especializacao:
-            messagebox.showerror("Erro ao inserir treinador", "Especialização não pode estar vazia.")
-            raise ValueError("Especialização não pode estar vazia.")
-
-        if not experiencia.isdigit():
-            messagebox.showerror("Erro ao inserir treinador", "A experiência deve ser um número inteiro não negativo.")
-            raise ValueError("A experiência deve ser um número inteiro não negativo.")
-        experiencia = int(experiencia)
-        if experiencia < 0:
-            messagebox.showerror("Erro ao inserir treinador", "A experiência deve ser um número inteiro não negativo.")
-            raise ValueError("A experiência deve ser um número inteiro não negativo.")
-
-        if not isinstance(numero_registro, str) or len(numero_registro) < 6:
-            messagebox.showerror("Erro ao inserir treinador", "O número de registro não pode ter menos de 6 dígitos.")
-            raise ValueError("O número de registro não pode ter menos de 6 dígitos..")
-
-        conn = sqlite3.connect('academia.db')
-        cursor = conn.cursor()
-        cursor.execute(
-            'INSERT INTO treinadores (nome, especializacao, experiencia, numero_registro) VALUES (?, ?, ?, ?)',
-            (nome, especializacao, experiencia, numero_registro))
-        conn.commit()
-        conn.close()
-        print("Treinador cadastrado com sucesso!")
-    except sqlite3.Error as e:
-        print(f"Erro ao inserir treinador: {e}")
-        messagebox.showerror("Erro ao inserir treinador", str(e))
-    except ValueError as ve:
-        print(f"Erro ao inserir treinador: {ve}")
-        messagebox.showerror("Erro ao inserir treinador", str(ve))
+        atualizar_cliente(id_cliente, nome, idade, sexo, endereco, telefone)
+        listar_clientes_na_interface()
+        messagebox.showinfo("Sucesso", "Seu cadastro foi atualizado com sucesso!")
+    except:
+        messagebox.showerror("Erro", "Verifique os campos e tente novamente.")
 
 
 # Função para atualizar informações de um treinador com tratamento de exceções
@@ -273,109 +295,6 @@ def atualizar_treinador(id, nome=None, especializacao=None, experiencia=None, nu
         messagebox.showerror("Erro ao atualizar treinador", str(ve))
 
 
-# Função para excluir um treinador com tratamento de exceções
-def excluir_treinador(id):
-    try:
-        if not isinstance(id, int) or id < 1:
-            raise ValueError("ID do treinador inválido.")
-
-        conn = sqlite3.connect('academia.db')
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM treinadores WHERE id=?', (id,))
-        conn.commit()
-        conn.close()
-        print("Treinador excluído com sucesso!")
-    except (sqlite3.Error, ValueError) as e:
-        print(f"Erro ao excluir treinador: {e}")
-
-
-# Função para listar clientes na interface
-def listar_clientes_na_interface():
-    tree_clientes.delete(*tree_clientes.get_children())
-    conn = sqlite3.connect('academia.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM clientes')
-    clientes = cursor.fetchall()
-    conn.close()
-    for cliente in clientes:
-        tree_clientes.insert('', 'end', values=cliente)
-
-
-# Função para adicionar um novo cliente na interface
-def adicionar_cliente_na_interface():
-    nome = nome_cliente_entry.get()
-    idade = idade_cliente_entry.get()
-    sexo = sexo_cliente_entry.get()
-    endereco = endereco_cliente_entry.get()
-    telefone = telefone_cliente_entry.get()
-    inserir_cliente(nome, idade, sexo, endereco, telefone)
-    listar_clientes_na_interface()
-    nome_cliente_entry.delete(0, tk.END)
-    idade_cliente_entry.delete(0, tk.END)
-    sexo_cliente_entry.delete(0, tk.END)
-    endereco_cliente_entry.delete(0, tk.END)
-    telefone_cliente_entry.delete(0, tk.END)
-
-
-# Função para atualizar um cliente na interface
-def atualizar_cliente_na_interface():
-    selected_item = tree_clientes.selection()
-    if selected_item:
-        id_cliente = int(tree_clientes.item(selected_item, 'values')[0])
-        nome = nome_cliente_entry.get()
-        idade = idade_cliente_entry.get()
-        sexo = sexo_cliente_entry.get()
-        endereco = endereco_cliente_entry.get()
-        telefone = telefone_cliente_entry.get()
-
-        atualizar_cliente(id_cliente, nome, idade, sexo, endereco, telefone)
-        listar_clientes_na_interface()
-        nome_cliente_entry.delete(0, tk.END)
-        idade_cliente_entry.delete(0, tk.END)
-        sexo_cliente_entry.delete(0, tk.END)
-        endereco_cliente_entry.delete(0, tk.END)
-        telefone_cliente_entry.delete(0, tk.END)
-
-
-# Função para excluir um cliente na interface
-def excluir_cliente_na_interface():
-    selected_item = tree_clientes.selection()
-    if selected_item:
-        id_cliente = int(tree_clientes.item(selected_item, 'values')[0])
-        conn = sqlite3.connect('academia.db')
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM clientes WHERE id=?', (id_cliente,))
-        conn.commit()
-        conn.close()
-        listar_clientes_na_interface()
-
-
-# Função para listar treinadores na interface
-def listar_treinadores_na_interface():
-    tree_treinadores.delete(*tree_treinadores.get_children())
-    conn = sqlite3.connect('academia.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM treinadores')
-    treinadores = cursor.fetchall()
-    conn.close()
-    for treinador in treinadores:
-        tree_treinadores.insert('', 'end', values=treinador)
-
-
-def adicionar_treinador_na_interface():
-    nome_treinador = nome_treinador_entry.get()
-    especializacao = especializacao_entry.get()
-    experiencia = experiencia_entry.get()
-    numero_registro = numero_registro_entry.get()
-
-    inserir_treinador(nome_treinador, especializacao, experiencia, numero_registro)
-    listar_treinadores_na_interface()
-    nome_treinador_entry.delete(0, tk.END)
-    especializacao_entry.delete(0, tk.END)
-    experiencia_entry.delete(0, tk.END)
-    numero_registro_entry.delete(0, tk.END)
-
-
 # Função para atualizar um treinador na interface
 def atualizar_treinador_na_interface():
     selected_item = tree_treinadores.selection()
@@ -404,19 +323,128 @@ def atualizar_treinador_na_interface():
             especializacao_entry.delete(0, tk.END)
             experiencia_entry.delete(0, tk.END)
             numero_registro_entry.delete(0, tk.END)
+    try:
+        atualizar_treinador(id_treinador, nome_treinador, especializacao, experiencia, numero_registro)
+        listar_treinadores_na_interface()
+        messagebox.showinfo("Sucesso", "Seu cadastro foi atualizado com sucesso!")
+    except:
+        messagebox.showerror("Erro", "Verifique os campos e tente novamente.")
+
+
+# Função para excluir um cliente com tratamento de exceções
+def excluir_cliente(id):
+    try:
+        if not isinstance(id, int) or id < 1:
+            raise ValueError("ID do cliente inválido.")
+
+        conn = sqlite3.connect('academia.db')
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM clientes WHERE id=?', (id,))
+        conn.commit()
+        conn.close()
+        print("Cliente excluído com sucesso!")
+    except (sqlite3.Error, ValueError) as e:
+        print(f"Erro ao excluir cliente: {e}")
+        raise ValueError(f"Erro ao excluir cliente: {e}")
+
+
+# Função para excluir um cliente na interface
+def excluir_cliente_na_interface():
+    selected_item = tree_clientes.selection()
+    if selected_item:
+        confirmation = messagebox.askyesno("Confirmação", "Tem certeza que deseja excluir?")
+        if confirmation:
+            id_cliente = int(tree_clientes.item(selected_item, 'values')[0])
+            excluir_cliente(id_cliente)
+            listar_clientes_na_interface()
+            messagebox.showinfo("Sucesso", "Cliente excluído com sucesso!")
+
+
+# Função para excluir um treinador com tratamento de exceções
+def excluir_treinador(id):
+    try:
+        if not isinstance(id, int) or id < 1:
+            raise ValueError("ID do treinador inválido.")
+
+        conn = sqlite3.connect('academia.db')
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM treinadores WHERE id=?', (id,))
+        conn.commit()
+        conn.close()
+        print("Treinador excluído com sucesso!")
+    except (sqlite3.Error, ValueError) as e:
+        print(f"Erro ao excluir treinador: {e}")
+        raise ValueError(f"Erro ao excluir treinador: {e}")
 
 
 # Função para excluir um treinador na interface
 def excluir_treinador_na_interface():
     selected_item = tree_treinadores.selection()
     if selected_item:
-        id_treinador = int(tree_treinadores.item(selected_item, 'values')[0])
+        confirmation = messagebox.askyesno("Confirmação", "Tem certeza que deseja excluir?")
+        if confirmation:
+            id_treinador = int(tree_treinadores.item(selected_item, 'values')[0])
+            excluir_treinador(id_treinador)
+            listar_treinadores_na_interface()
+            messagebox.showinfo("Sucesso", "Treinador excluído com sucesso!")
+
+
+# Função para listar todos os clientes com tratamento de exceções
+def listar_clientes():
+    try:
         conn = sqlite3.connect('academia.db')
         cursor = conn.cursor()
-        cursor.execute('DELETE FROM treinadores WHERE id=?', (id_treinador,))
-        conn.commit()
+        cursor.execute('SELECT * FROM clientes')
+        clientes = cursor.fetchall()
         conn.close()
-        listar_treinadores_na_interface()
+        if not clientes:
+            print("Nenhum cliente cadastrado.")
+        else:
+            for cliente in clientes:
+                print(cliente)
+    except sqlite3.Error as e:
+        print(f"Erro ao listar clientes: {e}")
+
+
+# Função para listar clientes na interface
+def listar_clientes_na_interface():
+    tree_clientes.delete(*tree_clientes.get_children())
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM clientes')
+    clientes = cursor.fetchall()
+    conn.close()
+    for cliente in clientes:
+        tree_clientes.insert('', 'end', values=cliente)
+
+
+# Função para listar todos os treinadores com tratamento de exceções
+def listar_treinadores():
+    try:
+        conn = sqlite3.connect('academia.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM treinadores')
+        treinadores = cursor.fetchall()
+        conn.close()
+        if not treinadores:
+            print("Nenhum treinador cadastrado.")
+        else:
+            for treinador in treinadores:
+                print(treinador)
+    except sqlite3.Error as e:
+        print(f"Erro ao listar treinadores: {e}")
+
+
+# Função para listar treinadores na interface
+def listar_treinadores_na_interface():
+    tree_treinadores.delete(*tree_treinadores.get_children())
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM treinadores')
+    treinadores = cursor.fetchall()
+    conn.close()
+    for treinador in treinadores:
+        tree_treinadores.insert('', 'end', values=treinador)
 
 
 # Configuração da interface

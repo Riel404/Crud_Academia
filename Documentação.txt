@@ -1,0 +1,37 @@
+O sistema é um aplicativo de gerenciamento de uma academia, construído em Python utilizando a biblioteca Tkinter para a
+interface gráfica e SQLite para o banco de dados. Ele realiza operações básicas de gerenciamento de clientes e
+treinadores, como adicionar, atualizar e excluir informações.
+
+A estrutura do código mostra funções específicas para cada operação. As funções estão organizadas para lidar com entrada
+s dos usuários e com tratamento de exceções, garantindo que os dados inseridos atendam a certos critérios e prevenindo
+ erros no sistema.
+
+O sistema possui as seguintes funcionalidades:
+
+Funcionalidades para Clientes:
+Adicionar Cliente: Permite adicionar novos clientes.
+Atualizar Cliente: Atualiza informações de um cliente existente.
+Excluir Cliente: Remove um cliente do banco de dados.
+Funcionalidades para Treinadores:
+Adicionar Treinador: Adiciona novos treinadores.
+Atualizar Treinador: Atualiza informações de um treinador existente.
+Excluir Treinador: Remove um treinador do banco de dados.
+Visualização na Interface:
+Os dados dos clientes e treinadores são exibidos em tabelas separadas na interface.
+Campos para inserir informações de clientes e treinadores estão presentes para adicionar ou atualizar os registros.
+Instruções de Uso:
+Execute o código Python fornecido em um ambiente que suporte a biblioteca Tkinter.
+A interface gráfica será aberta, apresentando abas separadas para clientes e treinadores.
+Utilize os botões específicos para adicionar, atualizar ou excluir clientes/treinadores.
+Os dados serão mostrados nas tabelas correspondentes na interface.
+Importante: Para que o sistema funcione corretamente, é necessário ter a biblioteca Tkinter instalada no ambiente Python
+pois ela não requer instalação adicional, sendo parte da biblioteca padrão do Python. Além disso, o código pressupõe que
+você possui o banco de dados SQLite ('academia.db') no mesmo diretório onde o código está sendo executado.
+
+Lembre-se de ter cuidado ao lidar com as operações de atualização e exclusão, já que essas ações não possuem confirmação
+adicional na interface. Certifique-se de que as operações de exclusão são executadas com atenção, pois elas não podem
+ser desfeitas.
+
+Por fim, este sistema pode ser modificado ou expandido de acordo com as necessidades específicas da academia ou do
+projeto em questão. Sempre faça backup dos dados do banco de dados antes de realizar operações de atualização ou
+exclusão em grande escala.
