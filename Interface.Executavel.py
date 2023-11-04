@@ -85,8 +85,17 @@ def adicionar_cliente_na_interface():
             inserir_cliente(nome, idade, sexo, endereco, telefone)
             listar_clientes_na_interface()
             messagebox.showinfo("Sucesso", "Seu cadastro foi realizado com sucesso!")
+            limpar_campos_cliente()  # Limpar campos após adicionar com sucesso
         except:
             messagebox.showerror("Erro", "Ocorreu um erro ao adicionar o cliente. Por favor, tente novamente.")
+
+
+def limpar_campos_cliente():
+    nome_cliente_entry.delete(0, 'end')
+    idade_cliente_entry.delete(0, 'end')
+    sexo_cliente_entry.delete(0, 'end')
+    endereco_cliente_entry.delete(0, 'end')
+    telefone_cliente_entry.delete(0, 'end')
 
 
 # Função para cadastrar um treinador no banco de dados com tratamento de exceções
@@ -128,7 +137,6 @@ def inserir_treinador(nome, especializacao, experiencia, numero_registro):
         messagebox.showerror("Erro ao inserir treinador", str(ve))
 
 
-# Função para adicionar um novo treinador na interface
 def adicionar_treinador_na_interface():
     nome_treinador = nome_treinador_entry.get()
     especializacao = especializacao_entry.get()
@@ -156,8 +164,17 @@ def adicionar_treinador_na_interface():
             inserir_treinador(nome_treinador, especializacao, experiencia, numero_registro)
             listar_treinadores_na_interface()
             messagebox.showinfo("Sucesso", "Seu cadastro foi realizado com sucesso!")
+            limpar_campos_treinador()  # Limpar campos após adicionar com sucesso
         except:
             messagebox.showerror("Erro", "Ocorreu um erro ao adicionar o treinador. Por favor, tente novamente.")
+
+
+# Função para limpar campos de texto para treinadores
+def limpar_campos_treinador():
+    nome_treinador_entry.delete(0, 'end')
+    especializacao_entry.delete(0, 'end')
+    experiencia_entry.delete(0, 'end')
+    numero_registro_entry.delete(0, 'end')
 
 
 # Função para atualizar informações de um cliente com tratamento de exceções
@@ -418,6 +435,86 @@ def listar_clientes_na_interface():
         tree_clientes.insert('', 'end', values=cliente)
 
 
+# Função para pesquisar clientes na interface
+def pesquisar_clientes_na_interface():
+    texto_nome = nome_cliente_entry.get()
+    texto_idade = idade_cliente_entry.get()
+    texto_sexo = sexo_cliente_entry.get()
+    texto_endereco = endereco_cliente_entry.get()
+    texto_telefone = telefone_cliente_entry.get()
+
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+
+    # Consulta SQL para pesquisar clientes baseada nos campos preenchidos
+    query = "SELECT * FROM clientes WHERE nome LIKE ? AND idade LIKE ? AND sexo LIKE ? AND endereco LIKE ? AND telefone LIKE ?"
+    cursor.execute(query,
+                   (texto_nome + "%", texto_idade + "%", texto_sexo + "%", texto_endereco + "%", texto_telefone + "%"))
+
+    clientes = cursor.fetchall()
+    conn.close()
+
+    # Limpar tabela antes de exibir resultados
+    tree_clientes.delete(*tree_clientes.get_children())
+
+    # Exibir resultados na tabela
+    for cliente in clientes:
+        tree_clientes.insert('', 'end', values=cliente)
+
+
+# Função para pesquisar clientes na interface
+def pesquisar_clientes_na_interface():
+    texto_nome = nome_cliente_entry.get()
+    texto_idade = idade_cliente_entry.get()
+    texto_sexo = sexo_cliente_entry.get()
+    texto_endereco = endereco_cliente_entry.get()
+    texto_telefone = telefone_cliente_entry.get()
+
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+
+    # Consulta SQL para pesquisar clientes baseada nos campos preenchidos
+    query = "SELECT * FROM clientes WHERE nome LIKE ? AND idade LIKE ? AND sexo LIKE ? AND endereco LIKE ? AND telefone LIKE ?"
+    cursor.execute(query,
+                   (texto_nome + "%", texto_idade + "%", texto_sexo + "%", texto_endereco + "%", texto_telefone + "%"))
+
+    clientes = cursor.fetchall()
+    conn.close()
+
+    # Limpar tabela antes de exibir resultados
+    tree_clientes.delete(*tree_clientes.get_children())
+
+    # Exibir resultados na tabela
+    for cliente in clientes:
+        tree_clientes.insert('', 'end', values=cliente)
+
+
+# Função para pesquisar treinadores na interface
+def pesquisar_treinadores_na_interface():
+    texto_nome = nome_treinador_entry.get()
+    texto_especializacao = especializacao_entry.get()
+    texto_experiencia = experiencia_entry.get()
+    texto_numero_registro = numero_registro_entry.get()
+
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+
+    # Consulta SQL para pesquisar treinadores baseada nos campos preenchidos
+    query = "SELECT * FROM treinadores WHERE nome LIKE ? AND especializacao LIKE ? AND experiencia LIKE ? AND numero_registro LIKE ?"
+    cursor.execute(query,
+                   (texto_nome + "%", texto_especializacao + "%", texto_experiencia + "%", texto_numero_registro + "%"))
+
+    treinadores = cursor.fetchall()
+    conn.close()
+
+    # Limpar tabela antes de exibir resultados
+    tree_treinadores.delete(*tree_treinadores.get_children())
+
+    # Exibir resultados na tabela
+    for treinador in treinadores:
+        tree_treinadores.insert('', 'end', values=treinador)
+
+
 # Função para listar todos os treinadores com tratamento de exceções
 def listar_treinadores():
     try:
@@ -443,6 +540,32 @@ def listar_treinadores_na_interface():
     cursor.execute('SELECT * FROM treinadores')
     treinadores = cursor.fetchall()
     conn.close()
+    for treinador in treinadores:
+        tree_treinadores.insert('', 'end', values=treinador)
+
+
+# Função para pesquisar treinadores na interface
+def pesquisar_treinadores_na_interface():
+    texto_nome = nome_treinador_entry.get()
+    texto_especializacao = especializacao_entry.get()
+    texto_experiencia = experiencia_entry.get()
+    texto_numero_registro = numero_registro_entry.get()
+
+    conn = sqlite3.connect('academia.db')
+    cursor = conn.cursor()
+
+    # Consulta SQL para pesquisar treinadores baseada nos campos preenchidos
+    query = "SELECT * FROM treinadores WHERE nome LIKE ? AND especializacao LIKE ? AND experiencia LIKE ? AND numero_registro LIKE ?"
+    cursor.execute(query,
+                   (texto_nome + "%", texto_especializacao + "%", texto_experiencia + "%", texto_numero_registro + "%"))
+
+    treinadores = cursor.fetchall()
+    conn.close()
+
+    # Limpar tabela antes de exibir resultados
+    tree_treinadores.delete(*tree_treinadores.get_children())
+
+    # Exibir resultados na tabela
     for treinador in treinadores:
         tree_treinadores.insert('', 'end', values=treinador)
 
@@ -508,6 +631,17 @@ atualizar_cliente_button.pack()
 excluir_cliente_button = tk.Button(clientes_tab, text="Excluir Cliente", command=excluir_cliente_na_interface)
 excluir_cliente_button.pack()
 
+# Botão para pesquisar clientes
+pesquisar_clientes_button = tk.Button(clientes_tab, text="Pesquisar Clientes", command=pesquisar_clientes_na_interface)
+pesquisar_clientes_button.pack()
+
+# Evento para chamar a função de pesquisa de clientes ao pressionar a tecla "Enter" nos campos de pesquisa
+nome_cliente_entry.bind('<Return>', lambda event: pesquisar_clientes_na_interface())
+idade_cliente_entry.bind('<Return>', lambda event: pesquisar_clientes_na_interface())
+sexo_cliente_entry.bind('<Return>', lambda event: pesquisar_clientes_na_interface())
+endereco_cliente_entry.bind('<Return>', lambda event: pesquisar_clientes_na_interface())
+telefone_cliente_entry.bind('<Return>', lambda event: pesquisar_clientes_na_interface())
+
 # Tabela de Treinadores
 tree_treinadores = ttk.Treeview(treinadores_tab,
                                 column=("ID", "Nome", "Especialização", "Experiência", "Número de Registro"),
@@ -551,6 +685,17 @@ atualizar_treinador_button.pack()
 
 excluir_treinador_button = tk.Button(treinadores_tab, text="Excluir Treinador", command=excluir_treinador_na_interface)
 excluir_treinador_button.pack()
+
+# Botão para pesquisar treinadores
+pesquisar_treinadores_button = tk.Button(treinadores_tab, text="Pesquisar Treinadores",
+                                         command=pesquisar_treinadores_na_interface)
+pesquisar_treinadores_button.pack()
+
+# Evento para chamar a função de pesquisa de treinadores ao pressionar a tecla "Enter" nos campos de pesquisa
+nome_treinador_entry.bind('<Return>', lambda event: pesquisar_treinadores_na_interface())
+especializacao_entry.bind('<Return>', lambda event: pesquisar_treinadores_na_interface())
+experiencia_entry.bind('<Return>', lambda event: pesquisar_treinadores_na_interface())
+numero_registro_entry.bind('<Return>', lambda event: pesquisar_treinadores_na_interface())
 
 listar_clientes_na_interface()
 listar_treinadores_na_interface()
