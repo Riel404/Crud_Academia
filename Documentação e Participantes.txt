@@ -1,3 +1,11 @@
+Participantes:
+Gabriel de Oliveira Vilela da Cruz
+Lucas Magalhães
+Lucinei Antunes
+William de Oliveira Silva
+Thiago Felipe
+
+
 O sistema é um aplicativo de gerenciamento de uma academia, construído em Python utilizando a biblioteca Tkinter para a
 interface gráfica e SQLite para o banco de dados. Ele realiza operações básicas de gerenciamento de clientes e
 treinadores, como adicionar, atualizar e excluir informações.
